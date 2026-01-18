@@ -22,7 +22,7 @@ export default function ItemsPage() {
       <h1 className="text-4xl font-black mb-10 text-center uppercase">DevStack Toolkit</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {tools.map(tool => (
-          <div key={tool.id} className="card bg-base-100 shadow-xl border border-base-300">
+          <div key={tool._id.toString()} className="card bg-base-100 shadow-xl border border-base-300">
             <figure><img src={tool.img} alt={tool.name} className="h-52 w-full object-cover" /></figure>
             <div className="card-body">
               <div className="badge badge-primary font-bold">{tool.category}</div>

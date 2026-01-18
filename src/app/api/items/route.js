@@ -1,11 +1,26 @@
+import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const devTools = [
-    { id: 1, name: "Cursor AI", category: "IDE", rating: 4.9, description: "The AI-first code editor.", img: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=400" },
-    { id: 2, name: "DaisyUI", category: "CSS Library", rating: 4.8, description: "Component library for Tailwind CSS.", img: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=400" },
-    { id: 3, name: "Supabase", category: "Database", rating: 4.7, description: "Firebase alternative for backend.", img: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400" }
-  ];
+  const client = await clientPromise;
+  const db = client.db("devstack_db");
+  const tools = await db.collection("tools").find({}).toArray();
+  return NextResponse.json(tools);
+}
 
-  return NextResponse.json(devTools);
+export async function POST(request) {
+  const body = await request.json();
+  const client = await clientPromise;
+  const db = client.db("devstack_db");
+  
+  const result = await db.collection("tools").insertOne({
+    name: body.name,
+    category: body.category,
+    description: body.description,
+    rating: body.rating || 5.0,
+    img: body.img || "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=400",
+    createdAt: new Date()
+  });
+
+  return NextResponse.json(result, { status: 201 });
 }
